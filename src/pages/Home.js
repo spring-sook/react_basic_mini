@@ -9,11 +9,14 @@ const Home = () => {
   useEffect(() => {
     const getMembers = async () => {
       try {
+        console.log("시작");
         const rsp = await AxiosApi.memberList(); // 매개변수 없기때문에 이렇게 하면 됨.
+        console.log("종료");
         console.log(rsp.data);
         setMembers(rsp.data);
       } catch (e) {
         alert("서버가 응답하지 않습니다.", e);
+        console.log(e);
       }
     };
     getMembers();
