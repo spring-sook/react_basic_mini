@@ -7,6 +7,7 @@ import Input from "../../components/InputComponent";
 import { Container, Items } from "../../components/SignupComponent";
 import AxiosApi from "../../api/AxiosApi";
 import Modal from "../../utils/Modal";
+import Commons from "../../utils/Common";
 
 const Img = styled.img`
   width: 180px;
@@ -48,13 +49,18 @@ const Login = () => {
   const onClickLogin = async () => {
     try {
       const rsp = await AxiosApi.login(inputEmail, inputPw);
+      // 로컬 스토리지에 저장하는건 임시..!
       localStorage.setItem("email", inputEmail);
       localStorage.setItem("isLogin", "TRUE");
       console.log(rsp.data);
-      if (rsp.data) {
+
+      if (rsp.data.grantType === "Bearer") {
+        console.log("액세스 토큰 : ", rsp.data.accessToken);
+        Commons.setAccessToken("accessToken", rsp.data.accessToken);
+        console.log("리프레시 토큰 : ", rsp.data.refreshToken);
+        Commons.setRefreshToken("refreshToken", rsp.data.refreshToken);
         navigate("/home");
       } else {
-        // alert("아이디 및 패스워드가 틀립니다.");
         setModalOpen(true);
         setModalContent("아이디 또는 패스워드가 일치하지 않습니다.");
       }
